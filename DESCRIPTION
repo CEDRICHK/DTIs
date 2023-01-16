@@ -17,3 +17,5 @@ RoxygenNote: 7.2.3
 Imports: 
     stringi,
     stringr
+URL: https://github.com/CEDRICHK/DTIs
+BugReports: https://github.com/CEDRICHK/DTIs/issues
