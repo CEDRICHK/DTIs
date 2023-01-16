@@ -1,0 +1,43 @@
+---
+title: "DTIs"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{DTIs}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+# Introduction
+
+The **uniprot_drug_data** function retrieves gene names and organism information of drugs from UniProt and returns the result as a data frame. The function takes a character vector of drug names as an input and returns a data frame containing the accession number, gene names, organism name, review status and the drug name.
+
+# Usage
+
+```{r usage}
+library(DTIs)
+uniprot_drug_data(drug = c("Aceclofenac", "Alverine"))
+```
+
+The above code will return a data frame containing the accession number, gene names, organism name, review status and the drug name for the drugs in the character vector passed to the function.
+
+## Example
+
+Retrieve data for Aceclofenac and Benzthiazide:
+
+```{r Example, warning=FALSE}
+# Retrieve data for Aceclofenac and Benzthiazide
+drug <- c("Aceclofenac", "Alverine")
+result <- uniprot_drug_data(drug)
+
+# Save the result to a CSV file
+write.csv(x = result, file = "./targets.csv", sep = ",", row.names = FALSE, col.names = TRUE)
+```
+
+This will return the gene names and organism information for the drugs **Aceclofenac** and **Alverine**, then save the result to a CSV file named *targets.csv*.
