@@ -29,10 +29,10 @@ The above code will return a data frame containing the accession number, gene na
 
 ## Example
 
-Retrieve data for Aceclofenac and Benzthiazide:
+Retrieve data for Aceclofenac and Alverine:
 
 ```{r Example, warning=FALSE}
-# Retrieve data for Aceclofenac and Benzthiazide
+# Retrieve data for Aceclofenac and Alverine
 drug <- c("Aceclofenac", "Alverine")
 result <- uniprot_drug_data(drug)
 
