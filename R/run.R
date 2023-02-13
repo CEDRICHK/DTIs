@@ -19,6 +19,3 @@ uniprot_drug_data(drug = c("Aceclofenac", "Benzthiazide", "Alverine", "Amikacin"
                   "Roxithromycin", "Scopolamine", "Silodosin", "Spectinomycin",
                   "Tetryzoline", "Theobromine", "Theophylline", "Tranexamic",
                   "Trichlormethiazide", "Tropicamide", "Valdecoxib", "Xylometazoline"))
-
-# write.csv(x = result, file = "./targets.csv", sep = ",", row.names = FALSE,
-#           col.names = TRUE)
