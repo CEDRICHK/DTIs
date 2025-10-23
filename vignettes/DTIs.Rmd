@@ -36,8 +36,34 @@ Retrieve data for Aceclofenac and Alverine:
 drug <- c("Aceclofenac", "Alverine")
 result <- uniprot_drug_data(drug)
 
-# Save the result to a CSV file
-write.csv(x = result, file = "./targets.csv", sep = ",", row.names = FALSE, col.names = TRUE)
+# Inspect the first rows
+head(result)
 ```
 
-This will return the gene names and organism information for the drugs **Aceclofenac** and **Alverine**, then save the result to a CSV file named *targets.csv*.
+This will return the gene names and organism information for the drugs **Aceclofenac** and **Alverine**, then display the first rows of the resulting tibble.
+
+## Batch query
+
+To replicate the exploratory script that previously lived in `R/run.R`, you can query a larger list of compounds. The chunk below is not executed when building the vignette (to avoid hitting the UniProt API during documentation builds), but you can run it locally:
+
+```{r BatchQuery, eval=FALSE}
+library(DTIs)
+
+drug <- c(
+  "Aceclofenac", "Benzthiazide", "Alverine", "Amikacin", "Azacytidine",
+  "Carbinoxamine", "Cefotetan", "Clidinium", "Clomifene",
+  "Clopidogrel", "Dexfenfluramine", "Diclofenamide", "Dipyrone",
+  "Dydrogesterone", "Etoposide", "Formoterol", "Haloperidol", "Hyoscyamine",
+  "Ifenprodil", "Indapamide", "Kanamycin", "Ketanserin", "Lomefloxacin",
+  "Methimazole", "Nimesulide", "Oxymetazoline", "Pargyline",
+  "Pentobarbital", "Phentolamine", "Prochlorperazine", "Raltitrexed",
+  "Roxithromycin", "Scopolamine", "Silodosin", "Spectinomycin",
+  "Tetryzoline", "Theobromine", "Theophylline", "Tranexamic",
+  "Trichlormethiazide", "Tropicamide", "Valdecoxib", "Xylometazoline"
+)
+
+targets <- uniprot_drug_data(drug)
+head(targets)
+```
+
+This longer-running example returns a tibble containing the UniProt entries and primary gene names for each compound in the list.
