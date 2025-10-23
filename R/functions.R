@@ -1,3 +1,43 @@
+build_uniprot_query <- function(query) {
+  if (is.null(query)) {
+    return(NULL)
+  }
+
+  if (is.character(query)) {
+    stopifnot(length(query) == 1L, stringi::stri_trim_both(query) != "")
+    return(query)
+  }
+
+  stopifnot(is.list(query), length(query) > 0)
+
+  tokens <- vapply(
+    seq_along(query),
+    function(idx) {
+      value <- query[[idx]]
+      stopifnot(!is.null(value))
+      value <- unlist(value, use.names = FALSE)
+      stopifnot(length(value) > 0, is.character(value))
+
+      value <- stringi::stri_trim_both(value)
+      stopifnot(all(value != ""))
+
+      field <- names(query)[idx]
+      field_is_missing <- is.null(field) || is.na(field) || field == "" ||
+        stringi::stri_trim_both(field) == ""
+
+      joined_value <- paste(value, collapse = "+or+")
+      if (field_is_missing) {
+        joined_value
+      } else {
+        paste0(stringi::stri_trim_both(field), ":(", joined_value, ")")
+      }
+    },
+    character(1)
+  )
+
+  paste(tokens, collapse = "+and+")
+}
+
 #' @title Retrieve data from UniProt using a query
 #' @description Retrieves data from UniProt using a query and returns the result as a data frame.
 #' @param query A list or character containing the query for UniProt.
@@ -13,36 +53,33 @@
 get_uniprot_data <- function(query = NULL, columns = c("id", "genes", "organism",
                                     "reviewed"))
 {
-  df <- NULL
-  if (!is.null(query)) {
-    if (typeof(query) == "list") {
-      formatted_queries <- sapply(1:length(query), function(x) {
-        ifelse(stringi::stri_isempty(names(query)[x]), paste(names(query)[x], "(", paste(query[[x]],
-                                           collapse = "+or+"), ")", sep = ""),
-        paste(names(query)[x], ":(", paste(query[[x]],
-                                           collapse = "+or+"), ")", sep = ""))
-      })
-      url <- "https://rest.uniprot.org/uniprotkb/search?query="
-      full_query <- paste(formatted_queries, collapse = "+and+")
-    }
-    else if (typeof(query) == "character") {
-      full_query <- query
-    }
-    else {
-      message("Query not supported")
-      return(NULL)
-    }
-    cols <- paste(columns, collapse = ",")
-    full_url <- paste("https://rest.uniprot.org/uniprotkb/search?query=",
-                      full_query, "&format=tsv&fields=", cols, sep = "")
-    df <- tryCatch({
-      read.table(full_url, sep = "\t", header = TRUE,
-                 check.names = FALSE, quote = "", stringsAsFactors = FALSE)
-    }, error = function(err) {
-      message("reading url 'https://www.uniprot.org/...' failed")
-    })
+  full_query <- build_uniprot_query(query)
+  if (is.null(full_query)) {
+    return(NULL)
   }
-  return(df)
+
+  cols <- paste(columns, collapse = ",")
+  full_url <- paste(
+    "https://rest.uniprot.org/uniprotkb/search?query=",
+    full_query,
+    "&format=tsv&fields=",
+    cols,
+    sep = ""
+  )
+
+  tryCatch({
+    read.table(
+      full_url,
+      sep = "\t",
+      header = TRUE,
+      check.names = FALSE,
+      quote = "",
+      stringsAsFactors = FALSE
+    )
+  }, error = function(err) {
+    message("reading url 'https://www.uniprot.org/...' failed")
+    NULL
+  })
 }
 
 #' @title Retrieve gene names and organism information of drugs from UniProt
