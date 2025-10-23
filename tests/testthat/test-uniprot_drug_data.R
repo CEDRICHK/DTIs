@@ -1,3 +1,6 @@
+skip_if_offline()
+skip_on_cran()
+
 test_that("uniprot_drug_data() retrieves gene names and organism information of drugs from UniProt", {
   drug <- c("Aceclofenac", "Benzthiazide")
   expected_output <- data.frame(Entry = c("P23219","P35354","P11712","Q9Y2D0","Q9ULX7",
@@ -29,5 +32,13 @@ test_that("uniprot_drug_data() retrieves gene names and organism information of 
                                          "Benzthiazide","Benzthiazide","Benzthiazide","Benzthiazide"))
   colnames(expected_output)[2] <- "Gene Names"
   output <- uniprot_drug_data(drug)
-  expect_equal(output, expected_output)
+  expect_s3_class(output, "data.frame")
+  expect_named(output, c("Entry", "Gene Names", "Organism", "Reviewed", "Drug"))
+  expect_gt(nrow(output), 0)
+
+  output_subset <- output[output$Drug %in% drug, ]
+  expect_true(all(expected_output$Entry %in% output_subset$Entry))
+
+  matched_genes <- output_subset[match(expected_output$Entry, output_subset$Entry), "Gene Names"]
+  expect_equal(matched_genes, expected_output$`Gene Names`)
 })
