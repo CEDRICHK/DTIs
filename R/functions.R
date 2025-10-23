@@ -58,6 +58,17 @@ get_uniprot_data <- function(query = NULL, columns = c("id", "genes", "organism"
     return(NULL)
   }
 
+  mock_fn <- getOption("DTIs.mock_response")
+  if (is.function(mock_fn)) {
+    mocked <- mock_fn(full_query, columns)
+    if (!is.null(mocked)) {
+      if (!inherits(mocked, "tbl_df")) {
+        mocked <- tibble::as_tibble(mocked)
+      }
+      return(mocked)
+    }
+  }
+
   cols <- paste(columns, collapse = ",")
   request <- httr2::request("https://rest.uniprot.org/uniprotkb/search")
   request <- httr2::req_url_query(
