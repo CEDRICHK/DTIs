@@ -18,7 +18,9 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
 Imports: 
     stringi,
-    stringr
+    stringr,
+    httr2,
+    tibble
 URL: https://github.com/CEDRICHK/DTIs
 BugReports: https://github.com/CEDRICHK/DTIs/issues
 VignetteBuilder: knitr

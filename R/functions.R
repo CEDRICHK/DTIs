@@ -25,7 +25,7 @@ build_uniprot_query <- function(query) {
       field_is_missing <- is.null(field) || is.na(field) || field == "" ||
         stringi::stri_trim_both(field) == ""
 
-      joined_value <- paste(value, collapse = "+or+")
+      joined_value <- paste(value, collapse = " OR ")
       if (field_is_missing) {
         joined_value
       } else {
@@ -35,7 +35,7 @@ build_uniprot_query <- function(query) {
     character(1)
   )
 
-  paste(tokens, collapse = "+and+")
+  paste(tokens, collapse = " AND ")
 }
 
 #' @title Retrieve data from UniProt using a query
@@ -59,27 +59,55 @@ get_uniprot_data <- function(query = NULL, columns = c("id", "genes", "organism"
   }
 
   cols <- paste(columns, collapse = ",")
-  full_url <- paste(
-    "https://rest.uniprot.org/uniprotkb/search?query=",
-    full_query,
-    "&format=tsv&fields=",
-    cols,
-    sep = ""
+  request <- httr2::request("https://rest.uniprot.org/uniprotkb/search")
+  request <- httr2::req_url_query(
+    request,
+    query = full_query,
+    format = "tsv",
+    fields = cols
   )
 
-  tryCatch({
-    read.table(
-      full_url,
-      sep = "\t",
-      header = TRUE,
+  response <- tryCatch(
+    httr2::req_perform(request),
+    error = function(err) {
+      message("Failed to retrieve data from UniProt: ", conditionMessage(err))
+      NULL
+    }
+  )
+
+  if (is.null(response)) {
+    return(NULL)
+  }
+
+  status <- httr2::resp_status(response)
+  if (status >= 400) {
+    message("UniProt request failed with status ", status)
+    return(NULL)
+  }
+
+  body <- httr2::resp_body_string(response)
+  if (!nzchar(body)) {
+    return(tibble::tibble())
+  }
+
+  parsed <- tryCatch(
+    utils::read.delim(
+      text = body,
       check.names = FALSE,
       quote = "",
       stringsAsFactors = FALSE
-    )
-  }, error = function(err) {
-    message("reading url 'https://www.uniprot.org/...' failed")
-    NULL
-  })
+    ),
+    error = function(err) {
+      message("Failed to parse UniProt response: ", conditionMessage(err))
+      NULL
+    }
+  )
+
+  if (is.null(parsed)) {
+    return(NULL)
+  }
+
+  tibble::as_tibble(parsed)
 }
 
 #' @title Retrieve gene names and organism information of drugs from UniProt
@@ -109,12 +137,11 @@ uniprot_drug_data <- function(drug) {
   mod_res <- lapply(seq_along(res), function(idx) {
     df <- res[[idx]]
     if (is.null(df) || nrow(df) == 0) {
-      df <- data.frame(
+      df <- tibble::tibble(
         Entry = character(),
-        "Gene Names" = character(),
+        `Gene Names` = character(),
         Organism = character(),
-        Reviewed = character(),
-        stringsAsFactors = FALSE
+        Reviewed = character()
       )
     } else {
       df$`Gene Names` <- stringr::word(df$`Gene Names`, 1)
@@ -122,7 +149,7 @@ uniprot_drug_data <- function(drug) {
     df$Drug <- rep(drug[idx], length.out = nrow(df))
     df
   })
-  df <- do.call("rbind", mod_res)
-  result <- na.omit(df)
-  return(result)
+  df <- dplyr::bind_rows(mod_res)
+  result <- stats::na.omit(df)
+  return(tibble::as_tibble(result))
 }

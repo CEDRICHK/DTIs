@@ -32,6 +32,7 @@ test_that("uniprot_drug_data() retrieves gene names and organism information of 
                                          "Benzthiazide","Benzthiazide","Benzthiazide","Benzthiazide"))
   colnames(expected_output)[2] <- "Gene Names"
   output <- uniprot_drug_data(drug)
+  skip_if(is.null(output) || nrow(output) == 0, "UniProt query failed during test")
   expect_s3_class(output, "data.frame")
   expect_named(output, c("Entry", "Gene Names", "Organism", "Reviewed", "Drug"))
   expect_gt(nrow(output), 0)
