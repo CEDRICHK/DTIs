@@ -119,7 +119,6 @@ get_uniprot_data <- function(query = NULL, columns = c("id", "genes", "organism"
 #' uniprot_drug_data(drug)
 
 #' @import queryup
-#' @import dplyr
 #' @import magrittr
 #' @import stringr
 
@@ -149,7 +148,7 @@ uniprot_drug_data <- function(drug) {
     df$Drug <- rep(drug[idx], length.out = nrow(df))
     df
   })
-  df <- dplyr::bind_rows(mod_res)
+  df <- do.call(rbind, mod_res)
   result <- stats::na.omit(df)
   return(tibble::as_tibble(result))
 }
