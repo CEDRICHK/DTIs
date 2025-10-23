@@ -40,6 +40,6 @@ test_that("uniprot_drug_data() retrieves gene names and organism information of 
   output_subset <- output[output$Drug %in% drug, ]
   expect_true(all(expected_output$Entry %in% output_subset$Entry))
 
-  matched_genes <- output_subset[match(expected_output$Entry, output_subset$Entry), "Gene Names"]
+  matched_genes <- output_subset[match(expected_output$Entry, output_subset$Entry), "Gene Names", drop = TRUE]
   expect_equal(matched_genes, expected_output$`Gene Names`)
 })
