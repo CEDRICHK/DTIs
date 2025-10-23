@@ -1,21 +1,4 @@
 #' @title Retrieve data from UniProt using a query
-#' @description Robust alternative to cbind that fills missing values and works on arbitrary data types.
-#' @param ... any number of R data objects.
-#' @param fill R object to fill empty rows in columns below the max size. If unspecified, repeats input rows in the same way as cbind.
-#' @details  Originally written for the row.r package by Craig Varrichio. Included here because the rowr package was discontinued. I use these functions in my packages
-#' @examples
-#' cbind.fill(c(1,2,3),list(1,2,3),cbind(c(1,2,3)))
-#' cbind.fill(rbind(1:2),rbind(3:4))
-
-cbind.fill <- function(...){
-  nm <- list(...)
-  nm <- lapply(nm, as.matrix)
-  n <- max(sapply(nm, nrow))
-  do.call(cbind, lapply(nm, function (x)
-    rbind(x, matrix(, n-nrow(x), ncol(x)))))
-}
-
-#' @title Retrieve data from UniProt using a query
 #' @description Retrieves data from UniProt using a query and returns the result as a data frame.
 #' @param query A list or character containing the query for UniProt.
 #' @param columns A vector of column names to be returned in the data frame.
@@ -79,15 +62,21 @@ uniprot_drug_data <- function(drug) {
   query <- lapply(drug, function(x) list(x, "organism_id" = "9606", "reviewed" = "true"))
   res <- lapply(query, function(x) get_uniprot_data(x, columns = c("accession", "gene_names", "organism_name", "reviewed")))
   replace_genes <- lapply(1:length(query), function(x) stringr::word(str = res[[x]]$`Gene Names`,1))
-  mod_res <- lapply(1:length(query), function(x) {
-    if(nrow(res[[x]]) == 0) {
-      res[[x]] <- cbind.fill(res[[x]], Drug = drug[x])
-      colnames(res[[x]])[5] <- "Drug"
-    }else{
-      res[[x]]$`Gene Names` = replace_genes[[x]]
-      res[[x]] <- cbind(res[[x]], Drug = drug[x])
+  mod_res <- lapply(seq_along(res), function(idx) {
+    df <- res[[idx]]
+    if (is.null(df) || nrow(df) == 0) {
+      df <- data.frame(
+        Entry = character(),
+        "Gene Names" = character(),
+        Organism = character(),
+        Reviewed = character(),
+        stringsAsFactors = FALSE
+      )
+    } else {
+      df$`Gene Names` <- replace_genes[[idx]]
     }
-    return(res[[x]])
+    df$Drug <- drug[idx]
+    df
   })
   df <- do.call("rbind", mod_res)
   result <- na.omit(df)
