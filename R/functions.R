@@ -97,8 +97,15 @@ get_uniprot_data <- function(query = NULL, columns = c("id", "genes", "organism"
 
 uniprot_drug_data <- function(drug) {
   query <- lapply(drug, function(x) list(x, "organism_id" = "9606", "reviewed" = "true"))
-  res <- lapply(query, function(x) get_uniprot_data(x, columns = c("accession", "gene_names", "organism_name", "reviewed")))
-  replace_genes <- lapply(1:length(query), function(x) stringr::word(str = res[[x]]$`Gene Names`,1))
+  res <- lapply(
+    query,
+    function(x) {
+      get_uniprot_data(
+        x,
+        columns = c("accession", "gene_names", "organism_name", "reviewed")
+      )
+    }
+  )
   mod_res <- lapply(seq_along(res), function(idx) {
     df <- res[[idx]]
     if (is.null(df) || nrow(df) == 0) {
@@ -110,9 +117,9 @@ uniprot_drug_data <- function(drug) {
         stringsAsFactors = FALSE
       )
     } else {
-      df$`Gene Names` <- replace_genes[[idx]]
+      df$`Gene Names` <- stringr::word(df$`Gene Names`, 1)
     }
-    df$Drug <- drug[idx]
+    df$Drug <- rep(drug[idx], length.out = nrow(df))
     df
   })
   df <- do.call("rbind", mod_res)
