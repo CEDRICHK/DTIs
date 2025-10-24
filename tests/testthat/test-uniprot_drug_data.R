@@ -32,3 +32,20 @@ test_that("uniprot_drug_data() retrieves gene names and organism information of 
   output <- uniprot_drug_data(drug)
   expect_equal(output, tibble::as_tibble(expected_output))
 })
+
+test_that("uniprot_drug_data() fills missing columns with NA", {
+  withr::local_options(
+    DTIs.mock_response = function(full_query, columns) {
+      if (identical(full_query, "Aceclofenac") &&
+          identical(columns, c("id", "genes", "organism", "reviewed"))) {
+        return(tibble::tibble(id = "P00000"))
+      }
+      tibble::tibble(Entry = character())
+    }
+  )
+  result <- uniprot_drug_data("Aceclofenac")
+  expect_equal(result$Entry, "P00000")
+  expect_true(all(is.na(result$`Gene Names`)))
+  expect_true(all(is.na(result$Organism)))
+  expect_true(all(is.na(result$Reviewed)))
+})

@@ -60,7 +60,13 @@ get_uniprot_data <- function(query = NULL, columns = c("id", "genes", "organism"
 
   mock_fn <- getOption("DTIs.mock_response")
   if (is.function(mock_fn)) {
-    mocked <- mock_fn(full_query, columns)
+    mocked <- tryCatch(
+      mock_fn(full_query, columns),
+      error = function(err) {
+        message("Mock UniProt responder failed: ", conditionMessage(err))
+        NULL
+      }
+    )
     if (!is.null(mocked)) {
       if (!inherits(mocked, "tbl_df")) {
         mocked <- tibble::as_tibble(mocked)
@@ -154,6 +160,16 @@ uniprot_drug_data <- function(drug) {
         Reviewed = character()
       )
     } else {
+      required_cols <- c("Entry", "Gene Names", "Organism", "Reviewed")
+      missing_cols <- setdiff(required_cols, names(df))
+      if (length(missing_cols) > 0) {
+        df[missing_cols] <- replicate(
+          length(missing_cols),
+          rep(NA_character_, nrow(df)),
+          simplify = FALSE
+        )
+      }
+      df <- df[, required_cols, drop = FALSE]
       df$`Gene Names` <- stringr::word(df$`Gene Names`, 1)
     }
     df$Drug <- rep(drug[idx], length.out = nrow(df))

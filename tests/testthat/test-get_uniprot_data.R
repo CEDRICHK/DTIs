@@ -11,3 +11,14 @@ test_that("get_uniprot_data() retrieves data from UniProt using a query", {
   )
   expect_equal(output, expected_output)
 })
+
+test_that("get_uniprot_data() rejects empty character query", {
+  expect_error(get_uniprot_data(""), class = "simpleError")
+})
+
+test_that("get_uniprot_data() returns NULL when the request fails", {
+  withr::local_options(
+    DTIs.mock_response = function(...) stop("forced failure", call. = FALSE)
+  )
+  expect_null(get_uniprot_data("Aceclofenac"))
+})
