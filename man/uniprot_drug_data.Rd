@@ -10,12 +10,30 @@ uniprot_drug_data(drug)
 \item{drug}{A character vector containing the names of drugs.}
 }
 \value{
-A data frame containing the accession number, gene names, organism name, review status and the drug name.
+A tibble containing the accession number, primary gene symbol, organism,
+review status and the drug name.
 }
 \description{
-Retrieves gene names and organism information of drugs from UniProt and returns the result as a data frame.
+Convenience wrapper that builds the recommended UniProt query for a set of drugs
+and returns the matched entries and primary gene names.
 }
 \examples{
-drug <- c("Aceclofenac", "Benzthiazide")
-uniprot_drug_data(drug)
+old_options <- options(
+  DTIs.mock_response = function(full_query, columns) {
+    if (full_query == "Aceclofenac AND organism_id:(9606) AND reviewed:(true)") {
+      return(tibble::tibble(
+        Entry = "P23219",
+        `Gene Names` = "PTGS1",
+        Organism = "Homo sapiens (Human)",
+        Reviewed = "reviewed"
+      ))
+    }
+    tibble::tibble()
+  }
+)
+on.exit(options(old_options), add = TRUE)
+uniprot_drug_data("Aceclofenac")
+}
+\seealso{
+\code{\link{get_uniprot_data}}
 }

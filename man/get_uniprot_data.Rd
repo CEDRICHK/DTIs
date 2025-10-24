@@ -15,13 +15,32 @@ get_uniprot_data(
 \item{columns}{A vector of column names to be returned in the data frame.}
 }
 \value{
-A data frame containing the retrieved data.
+A tibble containing the retrieved data.
 }
 \description{
-Retrieves data from UniProt using a query and returns the result as a data frame.
+Issue a UniProt REST query and return the result as a tibble. During testing you
+can supply a mock responder via the \code{DTIs.mock_response} option to avoid
+hitting the live service.
+}
+\details{
+When \code{query} is a list, each element corresponds to a field. Named elements
+generate fielded searches (e.g., \code{drug = "Aceclofenac"} becomes
+\code{drug:(Aceclofenac)}), whereas unnamed elements are treated as raw tokens.
 }
 \examples{
-query <- list(list("Aceclofenac", organism_id = "9606", reviewed = "true"))
-columns <- c("accession", "gene_names", "organism_name", "reviewed")
-get_uniprot_data(query[[1]], columns)
+old_options <- options(
+  DTIs.mock_response = function(full_query, columns) {
+    tibble::tibble(
+      Entry = "P23219",
+      `Gene Names` = "PTGS1",
+      Organism = "Homo sapiens (Human)",
+      Reviewed = "reviewed"
+    )
+  }
+)
+on.exit(options(old_options), add = TRUE)
+get_uniprot_data("Aceclofenac")
+}
+\seealso{
+\code{\link{uniprot_drug_data}}
 }

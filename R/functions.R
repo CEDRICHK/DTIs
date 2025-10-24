@@ -1,3 +1,9 @@
+#' Build a UniProt query string compatible with the REST API.
+#'
+#' @param query Either a length-one character string or a non-empty list of
+#'   character vectors describing query tokens.
+#' @keywords internal
+#' @noRd
 build_uniprot_query <- function(query) {
   if (is.null(query)) {
     return(NULL)
@@ -38,18 +44,45 @@ build_uniprot_query <- function(query) {
   paste(tokens, collapse = " AND ")
 }
 
-#' @title Retrieve data from UniProt using a query
-#' @description Retrieves data from UniProt using a query and returns the result as a data frame.
-#' @param query A list or character containing the query for UniProt.
-#' @param columns A vector of column names to be returned in the data frame.
-#' @return A data frame containing the retrieved data.
+#' Retrieve data from UniProt using a query
+#'
+#' @description
+#' Issue a UniProt REST query and return the result as a tibble. During testing
+#' you can supply a mock responder via the `DTIs.mock_response` option to avoid
+#' hitting the live service.
+#'
+#' @param query A character string or list describing the query to submit to
+#'   UniProt (see Details).
+#' @param columns Character vector of UniProt columns to retrieve.
+#'
+#' @return A tibble with one row per UniProt entry that matches the query, or
+#'   `NULL`/an empty tibble when nothing is retrieved.
+#'
+#' @details
+#' When `query` is a list, each element corresponds to a field. Named elements
+#' generate fielded searches (e.g., `drug = "Aceclofenac"` becomes
+#' `drug:(Aceclofenac)`), whereas unnamed elements are treated as raw tokens.
+#'
 #' @examples
-#' query <- list(list("Aceclofenac", organism_id = "9606", reviewed = "true"))
-#' columns <- c("accession", "gene_names", "organism_name", "reviewed")
-#' get_uniprot_data(query[[1]], columns)
-
-#' @import stringi
-
+#' old_options <- options(
+#'   DTIs.mock_response = function(full_query, columns) {
+#'     tibble::tibble(
+#'       Entry = "P23219",
+#'       `Gene Names` = "PTGS1",
+#'       Organism = "Homo sapiens (Human)",
+#'       Reviewed = "reviewed"
+#'     )
+#'   }
+#' )
+#' on.exit(options(old_options), add = TRUE)
+#' get_uniprot_data("Aceclofenac")
+#'
+#' @seealso [uniprot_drug_data()]
+#' @export
+#' @importFrom httr2 request req_url_query req_perform resp_status resp_body_string
+#' @importFrom stringi stri_trim_both
+#' @importFrom tibble tibble as_tibble
+#' @importFrom utils read.delim
 get_uniprot_data <- function(query = NULL, columns = c("id", "genes", "organism",
                                     "reviewed"))
 {
@@ -130,18 +163,37 @@ get_uniprot_data <- function(query = NULL, columns = c("id", "genes", "organism"
   tibble::as_tibble(parsed)
 }
 
-#' @title Retrieve gene names and organism information of drugs from UniProt
-#' @description Retrieves gene names and organism information of drugs from UniProt and returns the result as a data frame.
-#' @param drug A character vector containing the names of drugs.
-#' @return A data frame containing the accession number, gene names, organism name, review status and the drug name.
+#' Retrieve gene names and organism information of drugs from UniProt
+#'
+#' @description
+#' Convenience wrapper that builds the recommended UniProt query for a set of
+#' drugs and returns the matched entries and primary gene names.
+#'
+#' @param drug Character vector of drug names.
+#'
+#' @return A tibble containing the UniProt accession, primary gene symbol,
+#'   organism, review status, and the originating drug for each hit.
+#'
 #' @examples
-#' drug <- c("Aceclofenac", "Benzthiazide")
-#' uniprot_drug_data(drug)
-
-#' @import queryup
-#' @import magrittr
-#' @import stringr
-
+#' old_options <- options(
+#'   DTIs.mock_response = function(full_query, columns) {
+#'     if (full_query == "Aceclofenac AND organism_id:(9606) AND reviewed:(true)") {
+#'       return(tibble::tibble(
+#'         Entry = "P23219",
+#'         `Gene Names` = "PTGS1",
+#'         Organism = "Homo sapiens (Human)",
+#'         Reviewed = "reviewed"
+#'       ))
+#'     }
+#'     tibble::tibble()
+#'   }
+#' )
+#' on.exit(options(old_options), add = TRUE)
+#' uniprot_drug_data("Aceclofenac")
+#'
+#' @seealso [get_uniprot_data()]
+#' @export
+#' @importFrom stringr word
 uniprot_drug_data <- function(drug) {
   query <- lapply(drug, function(x) list(x, "organism_id" = "9606", "reviewed" = "true"))
   res <- lapply(
