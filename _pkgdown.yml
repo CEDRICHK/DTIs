@@ -1,0 +1,33 @@
+url: https://cedrichk.github.io/DTIs
+
+home:
+  title: DTIs
+  description: Retrieve human UniProt targets for a list of drugs.
+
+navbar:
+  structure:
+    left: [reference, articles]
+    right: [github]
+  components:
+    reference:
+      text: Reference
+      href: reference/index.html
+    articles:
+      text: Articles
+      menu:
+        - text: Getting Started
+          href: articles/DTIs.html
+    github:
+      icon: fab fa-github
+      href: https://github.com/CEDRICHK/DTIs
+
+reference:
+  - title: UniProt helpers
+    contents:
+      - get_uniprot_data
+      - uniprot_drug_data
+
+articles:
+  - title: Guides
+    contents:
+      - DTIs
