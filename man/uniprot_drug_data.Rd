@@ -7,15 +7,15 @@
 uniprot_drug_data(drug)
 }
 \arguments{
-\item{drug}{A character vector containing the names of drugs.}
+\item{drug}{Character vector of drug names.}
 }
 \value{
-A tibble containing the accession number, primary gene symbol, organism,
-review status and the drug name.
+A tibble containing the UniProt accession, primary gene symbol,
+organism, review status, and the originating drug for each hit.
 }
 \description{
-Convenience wrapper that builds the recommended UniProt query for a set of drugs
-and returns the matched entries and primary gene names.
+Convenience wrapper that builds the recommended UniProt query for a set of
+drugs and returns the matched entries and primary gene names.
 }
 \examples{
 old_options <- options(
@@ -33,7 +33,8 @@ old_options <- options(
 )
 on.exit(options(old_options), add = TRUE)
 uniprot_drug_data("Aceclofenac")
+
 }
 \seealso{
-\code{\link{get_uniprot_data}}
+\code{\link[=get_uniprot_data]{get_uniprot_data()}}
 }

@@ -10,16 +10,18 @@ get_uniprot_data(
 )
 }
 \arguments{
-\item{query}{A list or character containing the query for UniProt.}
+\item{query}{A character string or list describing the query to submit to
+UniProt (see Details).}
 
-\item{columns}{A vector of column names to be returned in the data frame.}
+\item{columns}{Character vector of UniProt columns to retrieve.}
 }
 \value{
-A tibble containing the retrieved data.
+A tibble with one row per UniProt entry that matches the query, or
+\code{NULL}/an empty tibble when nothing is retrieved.
 }
 \description{
-Issue a UniProt REST query and return the result as a tibble. During testing you
-can supply a mock responder via the \code{DTIs.mock_response} option to avoid
+Issue a UniProt REST query and return the result as a tibble. During testing
+you can supply a mock responder via the \code{DTIs.mock_response} option to avoid
 hitting the live service.
 }
 \details{
@@ -40,7 +42,8 @@ old_options <- options(
 )
 on.exit(options(old_options), add = TRUE)
 get_uniprot_data("Aceclofenac")
+
 }
 \seealso{
-\code{\link{uniprot_drug_data}}
+\code{\link[=uniprot_drug_data]{uniprot_drug_data()}}
 }
