@@ -38,7 +38,7 @@ test_that("uniprot_drug_data() fills missing columns with NA", {
     DTIs.mock_response = function(full_query, columns) {
       if (identical(full_query, "Aceclofenac") &&
           identical(columns, c("id", "genes", "organism", "reviewed"))) {
-        return(tibble::tibble(id = "P00000"))
+        return(tibble::tibble(Entry = "P00000", `Gene Names` = NA_character_))
       }
       tibble::tibble(Entry = character())
     }
