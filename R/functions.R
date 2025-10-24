@@ -179,6 +179,8 @@ uniprot_drug_data <- function(drug) {
     df
   })
   df <- do.call(rbind, mod_res)
-  result <- stats::na.omit(df)
-  return(tibble::as_tibble(result))
+  if (!nrow(df)) {
+    return(tibble::as_tibble(df))
+  }
+  return(tibble::as_tibble(df))
 }
