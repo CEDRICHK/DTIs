@@ -42,6 +42,18 @@ head(result)
 
 This will return the gene names and organism information for the drugs **Aceclofenac** and **Alverine**, then display the first rows of the resulting tibble.
 
+If you want to persist the result, prefer using an explicit path handled by the
+`fs` package so that the workflow stays reproducible and portable:
+
+```{r SaveExample, eval=FALSE}
+fs::dir_create("analysis")
+fs::path("analysis", "targets.csv") |>
+  write.csv(result, row.names = FALSE)
+```
+
+This snippet creates an `analysis/` folder (if missing) and writes the CSV into
+it, keeping generated artefacts outside the package root.
+
 ## Batch query
 
 To replicate the exploratory script that previously lived in `R/run.R`, you can query a larger list of compounds. The chunk below is not executed when building the vignette (to avoid hitting the UniProt API during documentation builds), but you can run it locally:
@@ -64,6 +76,10 @@ drug <- c(
 
 targets <- uniprot_drug_data(drug)
 head(targets)
+
+# Persist a reproducible snapshot
+fs::dir_create("analysis")
+readr::write_csv(targets, fs::path("analysis", "batch_targets.csv"))
 ```
 
 This longer-running example returns a tibble containing the UniProt entries and primary gene names for each compound in the list.
