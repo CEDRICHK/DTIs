@@ -64,9 +64,12 @@ get_uniprot_data <- function(query = NULL, columns = c("id", "genes", "organism"
       mock_fn(full_query, columns),
       error = function(err) {
         message("Mock UniProt responder failed: ", conditionMessage(err))
-        NULL
+        structure(list(), class = "DTIs_mock_failure")
       }
     )
+    if (inherits(mocked, "DTIs_mock_failure")) {
+      return(NULL)
+    }
     if (!is.null(mocked)) {
       if (!inherits(mocked, "tbl_df")) {
         mocked <- tibble::as_tibble(mocked)
