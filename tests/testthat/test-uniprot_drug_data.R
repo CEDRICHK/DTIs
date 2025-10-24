@@ -36,9 +36,8 @@ test_that("uniprot_drug_data() retrieves gene names and organism information of 
 test_that("uniprot_drug_data() fills missing columns with NA", {
   withr::local_options(
     DTIs.mock_response = function(full_query, columns) {
-      if (identical(full_query, "Aceclofenac") &&
-          identical(columns, c("id", "genes", "organism", "reviewed"))) {
-        return(tibble::tibble(Entry = "P00000", `Gene Names` = NA_character_))
+      if (identical(full_query, "Aceclofenac AND organism_id:(9606) AND reviewed:(true)")) {
+        return(tibble::tibble(Entry = "P00000"))
       }
       tibble::tibble(Entry = character())
     }
