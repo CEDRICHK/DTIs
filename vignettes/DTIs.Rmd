@@ -21,8 +21,7 @@ The **uniprot_drug_data** function retrieves gene names and organism information
 # Usage
 
 ```{r usage}
-library(DTIs)
-uniprot_drug_data(drug = c("Aceclofenac", "Alverine"))
+DTIs::uniprot_drug_data(drug = c("Aceclofenac", "Alverine"))
 ```
 
 The above code will return a data frame containing the accession number, gene names, organism name, review status and the drug name for the drugs in the character vector passed to the function.
@@ -34,10 +33,10 @@ Retrieve data for Aceclofenac and Alverine:
 ```{r Example, warning=FALSE}
 # Retrieve data for Aceclofenac and Alverine
 drug <- c("Aceclofenac", "Alverine")
-result <- uniprot_drug_data(drug)
+targets <- DTIs::uniprot_drug_data(drug)
 
 # Inspect the first rows
-head(result)
+head(targets)
 ```
 
 This will return the gene names and organism information for the drugs **Aceclofenac** and **Alverine**, then display the first rows of the resulting tibble.
@@ -48,7 +47,7 @@ If you want to persist the result, prefer using an explicit path handled by the
 ```{r SaveExample, eval=FALSE}
 fs::dir_create("analysis")
 fs::path("analysis", "targets.csv") |>
-  write.csv(result, row.names = FALSE)
+  write.csv(targets, row.names = FALSE)
 ```
 
 This snippet creates an `analysis/` folder (if missing) and writes the CSV into
@@ -59,8 +58,6 @@ it, keeping generated artefacts outside the package root.
 To replicate the exploratory script that previously lived in `R/run.R`, you can query a larger list of compounds. The chunk below is not executed when building the vignette (to avoid hitting the UniProt API during documentation builds), but you can run it locally:
 
 ```{r BatchQuery, eval=FALSE}
-library(DTIs)
-
 drug <- c(
   "Aceclofenac", "Benzthiazide", "Alverine", "Amikacin", "Azacytidine",
   "Carbinoxamine", "Cefotetan", "Clidinium", "Clomifene",
@@ -74,7 +71,7 @@ drug <- c(
   "Trichlormethiazide", "Tropicamide", "Valdecoxib", "Xylometazoline"
 )
 
-targets <- uniprot_drug_data(drug)
+targets <- DTIs::uniprot_drug_data(drug)
 head(targets)
 
 # Persist a reproducible snapshot
