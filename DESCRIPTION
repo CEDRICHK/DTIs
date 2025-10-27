@@ -2,8 +2,9 @@ Package: DTIs
 Type: Package
 Title: Retrieve targets from Drugs with UniProt
 Version: 0.2.0
-Author: Cédric HASSEN-KHODJA
-Maintainer: The package maintainer <cedric.hassen-khodja@mri.cnrs.fr>
+Authors@R: 
+    person("Cédric", "HASSEN-KHODJA", email = "cedric.hassen-khodja@mri.cnrs.fr",
+           role = c("aut", "cre"))
 Description: From a list of drugs, you can obtain the gene names (targets) 
     and Organism (Human only at this time) by querying the UniProt Database.
 License: MIT + file LICENSE
