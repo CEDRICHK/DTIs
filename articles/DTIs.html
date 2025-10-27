@@ -97,14 +97,7 @@ names, organism name, review status and the drug name.</p>
 <h2 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a>
 </h2>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">DTIs</span><span class="fu">::</span><span class="fu"><a href="../reference/uniprot_drug_data.html">uniprot_drug_data</a></span><span class="op">(</span>drug <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Aceclofenac"</span>, <span class="st">"Alverine"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 4 × 5</span></span></span>
-<span><span class="co">#&gt;   Entry  `Gene Names` Organism             Reviewed Drug       </span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> P23219 PTGS1        Homo sapiens (Human) reviewed Aceclofenac</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> P11712 CYP2C9       Homo sapiens (Human) reviewed Aceclofenac</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> P35354 PTGS2        Homo sapiens (Human) reviewed Aceclofenac</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> P08908 HTR1A        Homo sapiens (Human) reviewed Alverine</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu">DTIs</span><span class="fu">::</span><span class="fu"><a href="../reference/uniprot_drug_data.html">uniprot_drug_data</a></span><span class="op">(</span>drug <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Aceclofenac"</span>, <span class="st">"Alverine"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>The above code will return a data frame containing the accession
 number, gene names, organism name, review status and the drug name for
 the drugs in the character vector passed to the function.</p>
@@ -118,14 +111,7 @@ the drugs in the character vector passed to the function.</p>
 <span><span class="va">targets</span> <span class="op">&lt;-</span> <span class="fu">DTIs</span><span class="fu">::</span><span class="fu"><a href="../reference/uniprot_drug_data.html">uniprot_drug_data</a></span><span class="op">(</span><span class="va">drug</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Inspect the first rows</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">targets</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 4 × 5</span></span></span>
-<span><span class="co">#&gt;   Entry  `Gene Names` Organism             Reviewed Drug       </span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> P23219 PTGS1        Homo sapiens (Human) reviewed Aceclofenac</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> P11712 CYP2C9       Homo sapiens (Human) reviewed Aceclofenac</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> P35354 PTGS2        Homo sapiens (Human) reviewed Aceclofenac</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> P08908 HTR1A        Homo sapiens (Human) reviewed Alverine</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">targets</span><span class="op">)</span></span></code></pre></div>
 <p>This will return the gene names and organism information for the
 drugs <strong>Aceclofenac</strong> and <strong>Alverine</strong>, then
 display the first rows of the resulting tibble.</p>
