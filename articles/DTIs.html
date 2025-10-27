@@ -97,8 +97,7 @@ names, organism name, review status and the drug name.</p>
 <h2 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a>
 </h2>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/CEDRICHK/DTIs" class="external-link">DTIs</a></span><span class="op">)</span></span>
-<span><span class="fu"><a href="../reference/uniprot_drug_data.html">uniprot_drug_data</a></span><span class="op">(</span>drug <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Aceclofenac"</span>, <span class="st">"Alverine"</span><span class="op">)</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu">DTIs</span><span class="fu">::</span><span class="fu"><a href="../reference/uniprot_drug_data.html">uniprot_drug_data</a></span><span class="op">(</span>drug <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Aceclofenac"</span>, <span class="st">"Alverine"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 4 × 5</span></span></span>
 <span><span class="co">#&gt;   Entry  `Gene Names` Organism             Reviewed Drug       </span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      </span></span>
@@ -116,10 +115,10 @@ the drugs in the character vector passed to the function.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Retrieve data for Aceclofenac and Alverine</span></span>
 <span><span class="va">drug</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Aceclofenac"</span>, <span class="st">"Alverine"</span><span class="op">)</span></span>
-<span><span class="va">result</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/uniprot_drug_data.html">uniprot_drug_data</a></span><span class="op">(</span><span class="va">drug</span><span class="op">)</span></span>
+<span><span class="va">targets</span> <span class="op">&lt;-</span> <span class="fu">DTIs</span><span class="fu">::</span><span class="fu"><a href="../reference/uniprot_drug_data.html">uniprot_drug_data</a></span><span class="op">(</span><span class="va">drug</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Inspect the first rows</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">result</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">targets</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 4 × 5</span></span></span>
 <span><span class="co">#&gt;   Entry  `Gene Names` Organism             Reviewed Drug       </span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      </span></span>
@@ -136,7 +135,7 @@ reproducible and portable:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">fs</span><span class="fu">::</span><span class="fu"><a href="https://fs.r-lib.org/reference/create.html" class="external-link">dir_create</a></span><span class="op">(</span><span class="st">"analysis"</span><span class="op">)</span></span>
 <span><span class="fu">fs</span><span class="fu">::</span><span class="fu"><a href="https://fs.r-lib.org/reference/path.html" class="external-link">path</a></span><span class="op">(</span><span class="st">"analysis"</span>, <span class="st">"targets.csv"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/utils/write.table.html" class="external-link">write.csv</a></span><span class="op">(</span><span class="va">result</span>, row.names <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="https://rdrr.io/r/utils/write.table.html" class="external-link">write.csv</a></span><span class="op">(</span><span class="va">targets</span>, row.names <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
 <p>This snippet creates an <code>analysis/</code> folder (if missing)
 and writes the CSV into it, keeping generated artefacts outside the
 package root.</p>
@@ -150,9 +149,7 @@ chunk below is not executed when building the vignette (to avoid hitting
 the UniProt API during documentation builds), but you can run it
 locally:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/CEDRICHK/DTIs" class="external-link">DTIs</a></span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">drug</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="va">drug</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
 <span>  <span class="st">"Aceclofenac"</span>, <span class="st">"Benzthiazide"</span>, <span class="st">"Alverine"</span>, <span class="st">"Amikacin"</span>, <span class="st">"Azacytidine"</span>,</span>
 <span>  <span class="st">"Carbinoxamine"</span>, <span class="st">"Cefotetan"</span>, <span class="st">"Clidinium"</span>, <span class="st">"Clomifene"</span>,</span>
 <span>  <span class="st">"Clopidogrel"</span>, <span class="st">"Dexfenfluramine"</span>, <span class="st">"Diclofenamide"</span>, <span class="st">"Dipyrone"</span>,</span>
@@ -165,7 +162,7 @@ locally:</p>
 <span>  <span class="st">"Trichlormethiazide"</span>, <span class="st">"Tropicamide"</span>, <span class="st">"Valdecoxib"</span>, <span class="st">"Xylometazoline"</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">targets</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/uniprot_drug_data.html">uniprot_drug_data</a></span><span class="op">(</span><span class="va">drug</span><span class="op">)</span></span>
+<span><span class="va">targets</span> <span class="op">&lt;-</span> <span class="fu">DTIs</span><span class="fu">::</span><span class="fu"><a href="../reference/uniprot_drug_data.html">uniprot_drug_data</a></span><span class="op">(</span><span class="va">drug</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">targets</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Persist a reproducible snapshot</span></span>
