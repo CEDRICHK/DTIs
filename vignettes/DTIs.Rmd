@@ -20,7 +20,7 @@ The **uniprot_drug_data** function retrieves gene names and organism information
 
 # Usage
 
-```{r usage}
+```{r usage, eval=FALSE}
 DTIs::uniprot_drug_data(drug = c("Aceclofenac", "Alverine"))
 ```
 
@@ -30,7 +30,7 @@ The above code will return a data frame containing the accession number, gene na
 
 Retrieve data for Aceclofenac and Alverine:
 
-```{r Example, warning=FALSE}
+```{r Example, warning=FALSE, eval=FALSE}
 # Retrieve data for Aceclofenac and Alverine
 drug <- c("Aceclofenac", "Alverine")
 targets <- DTIs::uniprot_drug_data(drug)
