@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">DTIs</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.0</span>
       </span>
     </div>
 
@@ -54,6 +54,25 @@
       <small>Source: <a href="https://github.com/CEDRICHK/DTIs/blob/master/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="page-header" data-toc-text="0.2.0" id="dtis-020">DTIs 0.2.0<a class="anchor" aria-label="anchor" href="#dtis-020"></a></h2>
+<div class="section level3">
+<h3 id="added-0-2-0">Added<a class="anchor" aria-label="anchor" href="#added-0-2-0"></a></h3>
+<ul><li>Replace UniProt fetches with an <code>httr2</code> workflow returning tibbles.</li>
+<li>Add fixture-backed mocks for deterministic tests covering edge cases.</li>
+<li>Document reproducible workflows in the vignette and README.</li>
+<li>Provide pkgdown configuration scaffold (run <code>usethis::use_pkgdown_github_pages()</code> to set up the site).</li>
+</ul></div>
+<div class="section level3">
+<h3 id="changed-0-2-0">Changed<a class="anchor" aria-label="anchor" href="#changed-0-2-0"></a></h3>
+<ul><li>Harden <code><a href="../reference/uniprot_drug_data.html">uniprot_drug_data()</a></code> against empty or partial API responses.</li>
+<li>Refresh roxygen documentation and namespace exports.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="removed-0-2-0">Removed<a class="anchor" aria-label="anchor" href="#removed-0-2-0"></a></h3>
+<ul><li>Drop the <code>cbind.fill</code> helper in favour of tidy bindings and delete the old run script.</li>
+</ul></div>
+</div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
